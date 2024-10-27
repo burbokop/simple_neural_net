@@ -3,8 +3,8 @@ use std::{
     ops::{Mul, Sub},
 };
 
-use serde::{Deserialize, Serialize};
 use crate::{Arr, Perceptron};
+use serde::{Deserialize, Serialize};
 
 pub trait Layer<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> {
     fn proceed(&self, input: &[T; INPUT_SIZE], normalizer: fn(T) -> T) -> Arr<T, OUTPUT_SIZE>;

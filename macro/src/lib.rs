@@ -109,11 +109,13 @@ pub fn compose_layers(input: TokenStream) -> TokenStream {
 
     let type_name = parsed.type_name;
     let input_size = parsed.layers[0];
-    let output_size = parsed.layers[parsed.layers.len() - 1];
+    let last_output_size = parsed.layers[parsed.layers.len() - 1];
     let init_args: Vec<_> = (0..parsed.layers.len() - 1).map(|x| format_ident!("l{}", x)).collect();
     let final_result_var_name = format_ident!("r{}", proceed_calls.len());
     let layer_types: Vec<_> = fields.iter().map(|x|x.tp.clone()).collect();
     let init_from_tuple_field: Vec<_> = (0..parsed.layers.len() - 1).map(|index| InitFromTupleField{ index }).collect();
+    let activations: Vec<_> = (0..parsed.layers.len() - 1).map(|x| format_ident!("r{}", x)).collect();
+    let output_sizes = &parsed.layers[1..parsed.layers.len()];
 
     quote!(
         #[derive(Debug, serde::Serialize, serde::Deserialize)]
@@ -135,7 +137,7 @@ pub fn compose_layers(input: TokenStream) -> TokenStream {
             }
         }
 
-        impl<T> simple_neural_net::Layer<T, #input_size, #output_size> for #type_name<T>
+        impl<T> simple_neural_net::Layer<T, #input_size, #last_output_size> for #type_name<T>
         where
             T: Clone,
             T: std::ops::Mul<Output = T>,
@@ -143,10 +145,28 @@ pub fn compose_layers(input: TokenStream) -> TokenStream {
             T: std::iter::Sum<T>,
         {
             #[inline(always)]
-            fn proceed(&self, input: &[T; #input_size], normalizer: fn(T) -> T) -> simple_neural_net::Arr<T, #output_size> {
+            fn proceed(&self, input: &[T; #input_size], normalizer: fn(T) -> T) -> simple_neural_net::Arr<T, #last_output_size> {
                 let r0 = self.l0.proceed(input, normalizer);
                 #(#proceed_calls;)*
                 #final_result_var_name
+            }
+        }
+
+        impl<T> #type_name<T> {
+            /// proceed_verbosely - proceed and return all actications on all layers as a result
+            #[inline(always)]
+            fn proceed_verbosely(&self, input: &[T; #input_size], normalizer: fn(T) -> T) -> (
+                #(simple_neural_net::Arr<T, {#output_sizes}>,)*
+            )
+            where
+                T: Clone,
+                T: std::ops::Mul<Output = T>,
+                T: std::ops::Sub<Output = T>,
+                T: std::iter::Sum<T>,
+            {
+                let r0 = self.l0.proceed(input, normalizer);
+                #(#proceed_calls;)*
+                (#(#activations,)*)
             }
         }
     ).into()
