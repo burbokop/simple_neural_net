@@ -15,6 +15,12 @@ pub struct PerceptronLayer<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize>
     perceptrons: Arr<Perceptron<T, INPUT_SIZE>, OUTPUT_SIZE>,
 }
 
+impl<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> PerceptronLayer<T, INPUT_SIZE, OUTPUT_SIZE> {
+    pub fn perceptrons(&self) -> &Arr<Perceptron<T, INPUT_SIZE>, OUTPUT_SIZE> {
+        &self.perceptrons
+    }
+}
+
 impl<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize>
     From<[Perceptron<T, INPUT_SIZE>; OUTPUT_SIZE]> for PerceptronLayer<T, INPUT_SIZE, OUTPUT_SIZE>
 {
