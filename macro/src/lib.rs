@@ -118,7 +118,7 @@ pub fn compose_layers(input: TokenStream) -> TokenStream {
     let output_sizes = &parsed.layers[1..parsed.layers.len()];
 
     quote!(
-        #[derive(Debug, serde::Serialize, serde::Deserialize)]
+        #[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
         struct #type_name<T> {
             #(#fields,)*
         }

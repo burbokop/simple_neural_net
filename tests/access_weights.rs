@@ -1,4 +1,4 @@
-use simple_neural_net::{compose_layers, normalizers::sigmoid, Layer};
+use simple_neural_net::{compose_layers, Layer};
 
 #[test]
 fn access_weights() {

@@ -8,7 +8,7 @@ use super::Arr;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Perceptron<T, const SIZE: usize> {
     weights: Arr<T, SIZE>,
     bias: T,

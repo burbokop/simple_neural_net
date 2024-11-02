@@ -10,7 +10,7 @@ pub trait Layer<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> {
     fn proceed(&self, input: &[T; INPUT_SIZE], normalizer: fn(T) -> T) -> Arr<T, OUTPUT_SIZE>;
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PerceptronLayer<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> {
     perceptrons: Arr<Perceptron<T, INPUT_SIZE>, OUTPUT_SIZE>,
 }
