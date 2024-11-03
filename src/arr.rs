@@ -1,6 +1,6 @@
 use std::{
     iter::Sum,
-    ops::{Add, Deref, Index, IndexMut, Mul, Sub},
+    ops::{Add, Deref, DerefMut, Index, IndexMut, Mul, Sub},
 };
 
 use rand::{
@@ -87,6 +87,12 @@ impl<T, const SIZE: usize> Deref for Arr<T, SIZE> {
     #[inline(always)]
     fn deref(&self) -> &Self::Target {
         unsafe { &*(self.0.deref() as *const [T] as *const [T; SIZE]) }
+    }
+}
+
+impl<T, const SIZE: usize> DerefMut for Arr<T, SIZE> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe { &mut *(self.0.deref_mut() as *mut [T] as *mut [T; SIZE]) }
     }
 }
 
@@ -189,5 +195,23 @@ impl<T, const SIZE: usize> From<[T; SIZE]> for Arr<T, SIZE> {
 impl<T: PartialEq, const SIZE: usize> PartialEq for Arr<T, SIZE> {
     fn eq(&self, other: &Self) -> bool {
         self.0 == other.0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Arr;
+
+    #[test]
+    fn deref_mut() {
+        let mut arr: Arr<f64, 16> = Default::default();
+
+        for v in arr.iter_mut() {
+            *v = 10.;
+        }
+
+        for v in arr.iter() {
+            assert_eq!(*v, 10.);
+        }
     }
 }
