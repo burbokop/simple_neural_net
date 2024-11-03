@@ -19,6 +19,10 @@ impl<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize> PerceptronLayer<T, IN
     pub fn perceptrons(&self) -> &Arr<Perceptron<T, INPUT_SIZE>, OUTPUT_SIZE> {
         &self.perceptrons
     }
+
+    pub fn perceptrons_mut(&mut self) -> &mut Arr<Perceptron<T, INPUT_SIZE>, OUTPUT_SIZE> {
+        &mut self.perceptrons
+    }
 }
 
 impl<T, const INPUT_SIZE: usize, const OUTPUT_SIZE: usize>
