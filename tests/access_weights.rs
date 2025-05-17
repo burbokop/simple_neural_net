@@ -11,18 +11,10 @@ fn access_weights() {
             ([8., 9., 10., 11.], 13.).into(),
         ]
         .into(),
-        [
-            ([14., 15., 16.], 20.).into(),
-            ([17., 18., 19.], 21.).into(),
-        ]
-        .into(),
-        [
-            ([22., 23.], 24.).into(),
-        ]
-        .into(),
+        [([14., 15., 16.], 20.).into(), ([17., 18., 19.], 21.).into()].into(),
+        [([22., 23.], 24.).into()].into(),
     );
 
     assert_eq!(net.l0.perceptrons()[0].weights()[0], 0.);
     assert_eq!(*net.l0.perceptrons()[0].bias(), 12.);
-
 }

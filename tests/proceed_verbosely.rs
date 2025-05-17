@@ -1,4 +1,9 @@
-use simple_neural_net::{compose_layers, normalizers::sigmoid, Layer};
+use simple_neural_net::{compose_layers, Layer};
+
+fn sigmoid(x: f64) -> f64 {
+    use std::f64::consts::E;
+    1. / (1. + E.powf(-x))
+}
 
 #[test]
 fn zero() {
